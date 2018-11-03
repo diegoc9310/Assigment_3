@@ -8,16 +8,17 @@ class Line(object):
         self.dst = dst
 
     def __str__(self):
-        return   '<' +str(self.src.index) + ',' + str(self.dst.index) + '>' 
+        return   '<' +str(self.src.index2) + ',' + str(self.dst.index2) + '>' 
 
 class Point(object):
     def __init__ (self, x, y,name):
         self.x = float(x)
         self.y = float(y)
         self.name = str(name)
+        self.index2=int(0)
         self.index = hashlib.sha1('(' + str(pp(self.x)) + ',' + str(pp(self.y))+ ')'.encode("UTF-8")).hexdigest()[:4]
     def __str__ (self):
-        return str(self.index)+':  '+'(' + str(pp(self.x)) + ',' + str(pp(self.y))+ ')'
+        return str(self.index2)+':  '+'(' + str(pp(self.x)) + ',' + str(pp(self.y))+ ')'
 def pp(x):
     """Returns a pretty-print string representation of a number.
        A float number is represented by an integer, if it is whole,
@@ -571,19 +572,33 @@ def graph_calculator(street_list):
   for i in xrange(0,(len(delete_list))):
     de= delete_list[i]-i
     del vertex_list[de]
+
+  for i in xrange(0,(len(vertex_list))):
+    for j in xrange(0,(len(edge_list))):
+      if str(vertex_list[i].index) == str(edge_list[j].src.index):
+        vertex_list[i].index2=i
+        edge_list[j].src.index2=i
+      if str(vertex_list[i].index) == str(edge_list[j].dst.index):
+        edge_list[j].dst.index2=i
+        vertex_list[i].index2=i
+    
        
 #Print Graph 
-  sys.stdout.write( "V = {\n" )
-  for i in xrange(0,(len(vertex_list))):
-    sys.stdout.write(str(vertex_list[i])+"\n")
-  sys.stdout.write("}\n")
-  sys.stdout.write( "E = {\n")
+#Old Printing
+  #sys.stdout.write( "V = {\n" )
+  #for i in xrange(0,(len(vertex_list))):
+    #sys.stdout.write(str(vertex_list[i])+"\n")
+  #sys.stdout.write("}\n")
+  Vertex_output= str(len(vertex_list))
+  sys.stdout.write("V "+Vertex_output+"\n")
+  edges_output="E {"
   for i in xrange(0,(len(edge_list))):
     if i==len(edge_list)-1:
-      sys.stdout.write(str(edge_list[i])+"\n")
+      edges_output+=(str(edge_list[i]))
     else:
-      sys.stdout.write( str(edge_list[i])+",\n")
-  sys.stdout.write("}\n")
+      edges_output+=( str(edge_list[i])+",")
+  edges_output+=("}\n")
+  sys.stdout.write(edges_output)
 
 def main():
 
