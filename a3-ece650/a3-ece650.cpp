@@ -13,14 +13,17 @@ using namespace std;
 int main(int argc, char *argv[])
 {
    int n;
-   char *arguments[100];
+   char *arguments[10];
    pid_t pid[4];
    int pipe_1[2], pipe_2[2];
    pipe(pipe_1); pipe(pipe_2);
   
    for (int i = 0; i < argc; ++i)
+   {
       arguments[i] = argv[i];
-   
+   }
+
+   arguments[9] = NULL;
    pid[0] = fork();
    if (pid[0] == 0)
    {
